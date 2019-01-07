@@ -8,6 +8,7 @@
 using namespace std;
 
 int size=0;
+int addr=1000;
 
 //This function extracts the .text section from the given elf file
 char* get_text(FILE* fd, Elf64_Ehdr eh, Elf64_Shdr sh_table[])
@@ -45,6 +46,7 @@ char* get_text(FILE* fd, Elf64_Ehdr eh, Elf64_Shdr sh_table[])
         }
         mydata[j]='\0';
         size = sh_table[i].sh_size;
+        addr=sh_table[i].sh_addr;
         return (mydata);
     } else {
         printf("Executable does not contain text segment");
@@ -65,7 +67,7 @@ void disass(char* code){
         exit(0);
     }
     
-    count = cs_disasm(handle, (unsigned char *)code, size + 1, 0x40000000, 0, &insn);
+    count = cs_disasm(handle, (unsigned char *)code, size + 1, addr, 0, &insn);
     if (count) {
         size_t j;
 
